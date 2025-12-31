@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
@@ -45,6 +45,68 @@ def thread_title(thread) -> str:
     return ", ".join(u.username for u in thread.users)
 
 
+def best_image_url(image_versions) -> Optional[str]:
+    if not image_versions or not image_versions.candidates:
+        return None
+    best = max(image_versions.candidates, key=lambda c: c.width * c.height)
+    return best.url
+
+
+def animated_media_url(animated: dict) -> Optional[str]:
+    if not isinstance(animated, dict):
+        return None
+    images = animated.get("images", {})
+    for key in ("fixed_height", "fixed_width", "original"):
+        if key in images and images[key].get("url"):
+            return images[key]["url"]
+    return animated.get("url")
+
+
+def extract_attachments(message) -> List[Dict[str, str]]:
+    attachments: List[Dict[str, str]] = []
+
+    if message.animated_media:
+        url = animated_media_url(message.animated_media)
+        if url:
+            attachments.append({"kind": "gif", "url": url, "label": "gif"})
+
+    if message.media:
+        if message.media.thumbnail_url:
+            attachments.append(
+                {
+                    "kind": "image",
+                    "url": str(message.media.thumbnail_url),
+                    "label": "image",
+                }
+            )
+        elif message.media.video_url:
+            attachments.append({"kind": "video", "label": "video"})
+        elif message.media.audio_url:
+            attachments.append({"kind": "audio", "label": "audio"})
+
+    if message.visual_media and message.visual_media.media:
+        media = message.visual_media.media
+        if media.media_type == 1:
+            url = best_image_url(media.image_versions2)
+            if url:
+                attachments.append({"kind": "image", "url": url, "label": "image"})
+            else:
+                attachments.append({"kind": "image", "label": "image"})
+        elif media.media_type == 2:
+            attachments.append({"kind": "video", "label": "video"})
+
+    if message.story_share:
+        attachments.append({"kind": "story", "label": "story"})
+    if message.reel_share:
+        attachments.append({"kind": "reel", "label": "reel"})
+    if message.media_share:
+        attachments.append({"kind": "post", "label": "post"})
+    if message.clip:
+        attachments.append({"kind": "clip", "label": "clip"})
+
+    return attachments
+
+
 @app.get("/")
 def index():
     return send_from_directory("static", "index.html")
@@ -81,15 +143,17 @@ def api_thread(thread_id: str):
     amount = int(request.args.get("amount", "20"))
     cl = get_client()
     messages = cl.direct_messages(thread_id, amount=amount)
-    payload = [
-        {
-            "id": m.id,
-            "user_id": str(m.user_id),
-            "text": m.text or "",
-            "timestamp": m.timestamp.isoformat(),
-        }
-        for m in sorted(messages, key=lambda x: x.timestamp)
-    ]
+    payload = []
+    for m in sorted(messages, key=lambda x: x.timestamp):
+        payload.append(
+            {
+                "id": m.id,
+                "user_id": str(m.user_id),
+                "text": m.text or "",
+                "timestamp": m.timestamp.isoformat(),
+                "attachments": extract_attachments(m),
+            }
+        )
     return jsonify(payload)
 
 

@@ -102,8 +102,26 @@ async function cmdRead(amount = 20) {
         ? "me"
         : currentUsers[String(m.user_id)] || m.user_id;
     const text = m.text || "";
-    printLine(`${m.timestamp} ${sender}: ${text}`);
+    const line = document.createElement("div");
+    line.className = "line";
+    line.textContent = `${m.timestamp} ${sender}: ${text}`;
+    output.appendChild(line);
+
+    if (Array.isArray(m.attachments)) {
+      for (const att of m.attachments) {
+        if ((att.kind === "image" || att.kind === "gif") && att.url) {
+          const img = document.createElement("img");
+          img.className = "media";
+          img.alt = att.label || att.kind || "media";
+          img.src = att.url;
+          output.appendChild(img);
+        } else if (att.kind) {
+          printLine(`[${att.kind}]`, "muted");
+        }
+      }
+    }
   }
+  output.scrollTop = output.scrollHeight;
 }
 
 async function cmdSend(text) {

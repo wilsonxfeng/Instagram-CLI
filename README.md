@@ -40,3 +40,5 @@ Open `http://127.0.0.1:5000` in a browser.
 
 ## Notes
 - A `session.json` file is created after first login and reused on later runs.
+- Web UI shows a terminal-style interface and supports the same commands.
+- DM media renders inline when possible (images and GIFs). Videos/stories show as labels.
