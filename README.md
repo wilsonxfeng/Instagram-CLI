@@ -24,6 +24,12 @@ PASSWORD=your_password
 python main.py
 ```
 
+## Web UI
+```bash
+python app.py
+```
+Open `http://127.0.0.1:5000` in a browser.
+
 ## Commands
 - `inbox [n]`
 - `open <index>`

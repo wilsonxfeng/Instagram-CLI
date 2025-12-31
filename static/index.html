@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IGCLI</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-glow"></div>
+    <main class="shell">
+      <header class="titlebar">
+        <div class="dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="title">igcli@localhost</div>
+      </header>
+
+      <section class="terminal">
+        <div class="banner">
+          <pre aria-hidden="true">
+                 ____          ____     _                    
+     ___      U /"___|u     U /"___|   |"|          ___      
+    |_"_|     \| |  _ /     \| | u   U | | u       |_"_|     
+     | |       | |_| |       | |/__   \| |/__       | |      
+   U/| |\u      \____|        \____|   |_____|    U/| |\u    
+.-,_|___|_,-.   _)(|_        _// \\    //  \\  .-,_|___|_,-. 
+ \_)-' '-(_/   (__)__)      (__)(__)  (_")("_)  \_)-' '-(_/  
+          </pre>
+          <div class="subtitle">Type <span class="accent">help</span> for commands.</div>
+        </div>
+
+        <div id="output" class="output" aria-live="polite"></div>
+
+        <form id="command-form" class="input-row" autocomplete="off">
+          <span id="prompt" class="prompt">ig/&gt;</span>
+          <input id="command-input" type="text" spellcheck="false" />
+        </form>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
