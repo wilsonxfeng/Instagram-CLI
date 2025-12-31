@@ -2,6 +2,8 @@
 
 Tiny REPL for Instagram DMs in your terminal.
 
+![IGCLI demo](demo.gif)
+
 ## Requirements
 - Python 3.13
 - An Instagram account
