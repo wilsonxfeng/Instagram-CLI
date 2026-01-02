@@ -11,12 +11,22 @@ THREAD_MESSAGE_LIMIT = 10
 
 
 def login_with_session(cl: Client, username: str, password: str) -> None:
-    if SESSION_PATH.exists():
+    had_session = SESSION_PATH.exists()
+    if had_session:
         cl.load_settings(SESSION_PATH)
     try:
         cl.login(username, password)
+        if had_session:
+            try:
+                cl.account_info()
+            except (ClientLoginRequired, ClientError):
+                print("Session appears invalid; deleting and recreating session.json...")
+                SESSION_PATH.unlink()
+                cl.login(username, password)
+                cl.dump_settings(SESSION_PATH)
     except (ClientLoginRequired, ClientError):
         if SESSION_PATH.exists():
+            print("Session appears invalid; deleting and recreating session.json...")
             SESSION_PATH.unlink()
         cl.login(username, password)
         cl.dump_settings(SESSION_PATH)
