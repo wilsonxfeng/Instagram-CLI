@@ -1,6 +1,7 @@
 # IGCLI
 
 Tiny REPL for Instagram DMs in your terminal.
+ts was vibecoded btw and doesn't represent my skill as a developer
 
 ![IGCLI demo](demo.gif)
 
@@ -39,9 +40,6 @@ Open `http://127.0.0.1:5000` in a browser.
 - `send <message>`
 - `back`
 - `quit`
-
-ts was vibecoded btw and doesn't represent my skill as a developer
-
 ## Notes
 - A `session.json` file is created after first login and reused on later runs.
 - Web UI shows a terminal-style interface and supports the same commands.
