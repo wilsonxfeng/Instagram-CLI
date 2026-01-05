@@ -1,7 +1,7 @@
 # IGCLI
 
-Tiny REPL for Instagram DMs in your terminal.
-ts was vibecoded btw and doesn't represent my skill as a developer
+Tiny REPL for Instagram DMs in your terminal.  
+(ts was vibecoded btw and doesn't represent my skill as a developer)
 
 ![IGCLI demo](demo.gif)
 
