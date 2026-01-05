@@ -40,6 +40,8 @@ Open `http://127.0.0.1:5000` in a browser.
 - `back`
 - `quit`
 
+ts was vibecoded btw and doesn't represent my skill as a developer
+
 ## Notes
 - A `session.json` file is created after first login and reused on later runs.
 - Web UI shows a terminal-style interface and supports the same commands.
